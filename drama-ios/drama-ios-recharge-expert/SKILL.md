@@ -5,118 +5,116 @@ description: Use for drama-ios work involving recharge, wallet, insufficient bal
 
 # Drama iOS Recharge Expert
 
-Use the personal semantic kernel to keep recharge changes inside existing responsibility and lifecycle boundaries. Treat source evidence as current implementation fact and the kernel as reviewed constraints with explicit status.
+Keep recharge work inside the current responsibility, identity, and lifecycle boundaries. Source is the current implementation fact; the personal kernel is the reviewed semantic authority. This skill orchestrates evidence and decisions and must not duplicate business facts from the kernel.
 
-## Authority and boundaries
+## Resident gates
 
-- Read recharge knowledge directly from `.huangdonghong/agent-knowledge/recharge/` at the repository root.
-- Treat that directory as the only personal authority for recharge knowledge.
-- Do not route through or depend on `.huangdonghong/.agents/context` for recharge knowledge. Continue obeying repository-level instructions that independently require general project context.
-- Do not copy business claims into this skill. Keep orchestration here and business facts in the authority directory.
-- Treat static indexing as investigation support, never as a complete call graph or proof that no dynamic caller exists.
+Run the current gate sequence in order. The sequence is an operational structure, not a permanent target count. Keep the working set limited to the current requirement; do not build an object graph or preload all recharge code.
 
-## Workflow
+### 1. Authority and release gate
 
-1. Locate the repository root with `git rev-parse --show-toplevel`.
-2. Read `.huangdonghong/agent-knowledge/recharge/README.md` and `.huangdonghong/agent-knowledge/recharge/semantics.yaml` directly.
-3. Read `architecture.md` for any R2/R3 task, cross-layer task, or task involving routing, payment result, receipt, arrival, UI/Flow lifecycle, notifications, context, trace/token/orderId, login, or logout.
-4. Select only semantics relevant to the task:
-   - Apply `confirmed` entries as implementation constraints.
-   - Use `provisional` entries only to request more evidence.
-   - Stop and request the owner's decision when a `disputed` entry is hit.
-   - Ignore `retired` entries by default while preserving their tombstones.
-   - For historical replay at a revision different from an entry's `last_verified_baseline`, treat the entry as a forward-reference investigation lead until its claim and evidence are revalidated at the replay revision. Do not import a later class, state owner, or route into an older baseline merely because the current kernel confirms it.
-5. Start with direct exact source reads (`rg`, `git grep <rev>`, or known paths) and the requirement coverage ledger below. Run the read-only index only when a still-uncovered clause needs cross-file caller, event producer/consumer, Bridge parity, or path discovery evidence; it is opt-in, not a per-task prerequisite. Prefer one to three exact identifiers over broad words and disable co-change on the first pass:
+1. Resolve two roots independently. The **source repository root** is the Git root of the business worktree being investigated. Resolve the **workbench root** in this order: the first ancestor of this `SKILL.md` containing `knowledge/recharge-kernel/manifest.yaml`; the `AGENT_WORKBENCH_ROOT` environment variable; then the installation convention `$HOME/Documents/Github/agent-workbench`. Validate the marker file after resolution. If no candidate is valid, stop explicitly; never fall back to a Kernel inside the source repository. Never infer one root from the other or persist the resolved absolute path.
+2. From the workbench root read `knowledge/recharge-kernel/README.md`, `active-semantics.yaml`, and `manifest.yaml`. This is the only personal authority for recharge knowledge; source-repository instructions may separately require general project context. Load `architecture.md` only for R2/R3, routing, result, arrival, context, notification, or login/logout work.
+3. Before using kernel claims, verify that `repo_commit` equals the source repository HEAD being inspected, the manifest supports only confirmed active semantics, and the recorded SHA-256 values match README, architecture, and active semantics. The manifest intentionally has no self-hash.
+4. If the authority is absent, incompatible, hash-mismatched, or requires tracked assets that are unavailable, stop explicitly. Do not silently fall back to stale knowledge.
+5. For the current working tree, record both HEAD and whether uncommitted source is being inspected. For historical replay, bind all source evidence to the requested revision and treat later kernel claims only as leads until revalidated there; never import a later class, owner, state, or route into an older baseline.
 
-   ```bash
-   python3 .agents/skills/drama-ios-recharge-expert/scripts/source_index.py \
-     --repo . --history-limit 0 --query <symbol-or-key> --query <event-or-path-token>
-   ```
+Start a loading receipt and keep it current:
 
-   Add `--rev <commit>` for historical replay. Do not use an implementation or later commit when evaluating a task at its pre-implementation baseline. If exact output is still broad, rerun one query at a time and consume only evidence tied to an uncovered clause. Enable bounded co-change or inspect name similarity only as a separately justified lead; never inject their full output by default.
-6. When the index is used, separate its output into these evidence categories:
-   - `exact_matches`: exact symbol, constant, key, or literal matches.
-   - `event_evidence`: producer, consumer, or declaration evidence.
-   - `historical_cochange`: paths changed in the same historical commits; use as a lead, not a dependency proof.
-   - `name_similarity`: low-confidence investigation appendix only.
-7. Follow exact matches into relevant control flow, data flow, state ownership, error paths, and cleanup paths. Record code facts, historical facts, inference, conflict, and unknowns separately.
-8. Assign the highest applicable risk:
-   - R0: documentation, comments, or pure Debug support disconnected from production entry points.
-   - R1: leaf UI, formatting, or pure models without routing or payment-state changes.
-   - R2: entry points, routing, configuration, analytics, Bridge, or cross-file context propagation.
-   - R3: ordering, IAP/Web results, receipt reporting, arrival, idempotency, notification payloads, context lifecycle, logout isolation, or payment state.
-9. Before editing, output the compact change contract below. For R3, request confirmation from the personal owner or payment owner. Stop for a disputed semantic, a source/kernel conflict, or a high-risk unknown that could alter user-visible payment behavior.
-10. After editing, inspect the actual diff. Report responsibility-boundary violations, missed paths, invariant risks, and confirmed entries whose evidence or invalidation condition may now be stale.
+```text
+repo_revision: <HEAD or replay commit; note WORKTREE when applicable>
+kernel_release_id: <manifest release_id>
+skill_hash_or_release: <runtime SHA-256/release when available, otherwise unavailable + reason>
+loaded_references: []
+loaded_research_decisions: []
+source_revision: <revision used for source evidence>
+risk: R0 | R1 | R2 | R3 | pending
+index_queries: []
+```
 
-## Pre-patch completeness pass
+Evaluation V2 绑定完整 Skill package 时，快照包含 `SKILL.md`、`agents/`、`references/`、`scripts/` 下的实际文件，排除 `__pycache__`、`.pyc`、`.pyo`。对每个文件计算 SHA-256，生成按 repo-relative POSIX path 排序的 `path sha256\n` 列表，再对该 UTF-8 列表计算 SHA-256；不得用入口文件哈希代替完整包 digest，也不得写入本机绝对路径。
 
-Before finalizing the change contract or a first-patch specification:
+### 2. Evidence gate
 
-1. Build a requirement coverage ledger with one row per explicit task clause. Every row must contain: the exact condition or preservation rule, evidence query/path or justified external-contract unknown, current owner, candidate action, and a static validation. A candidate is incomplete while any row has only investigation notes but no action/validation. Cover eligibility (including positivity/range, not merely non-empty), excluded scope, configuration readiness, defaults and nil input, entry points, ordering, retry, cleanup, completion authority, and error states.
-2. Fill the impact matrix even when a cell is unchanged: user type × legacy/new/black-user/wallet UI × Apple/Web/H5/RN channel × business type × result stage × retry/change-channel. Mark a cell `not applicable` or `unknown` with evidence instead of silently omitting it.
-3. For a multi-entry feature, separately name every requested entry, every excluded entry, user-segment eligibility, configuration validity, completion signal, and whether counters/state are shared or per scene. Do not let an obvious UI host replace the eligibility or configuration-validity row.
-4. Preserve the baseline's data carrier and owner unless an authoritative interface contract explicitly changes them. Product words such as “object” or “node” do not authorize inventing a generated SDK type, protobuf field, JSON key, or duplicate cache. When the baseline uses a serialized `expand`, prefer a guarded parser boundary until a new wire contract is evidenced.
-5. For cleanup or handoff, prove this order: replacement input is valid → replacement context is saved → narrow obsolete state is cleared → external action starts. Enumerate every exact caller; an invalid URL/channel or rejected handoff must leave retry context intact.
-6. Separate same-attempt retry from an explicit user change. A retry reuses the frozen attempt context; changing a channel, tier, or option revalidates only the fields whose applicability changed, while preserving trace and other transaction identity.
-7. Inventory transaction identity field by field from the task, baseline carrier, and confirmed semantics. Explicitly preserve or intentionally replace every named field across start, retry, change-channel, result routing, and cleanup; never let “complete context” stand in for a missing identity field.
-8. Complete the applicable result matrix explicitly: success, cancel, failure, timeout, unknown, risk-control, frozen/blocked, credited-currency arrival, and business-specific reward completion. For each nonterminal failure path, derive the primary user action from user capability, the original tier's available channels, and result semantics: retry, change payment, contact agent, or no safe action.
-9. Cross-check task behavior against every relevant confirmed exception or branch/type matrix loaded from the authority. State why an exception applies or is out of scope.
-10. When a disputed entry is hit, still provide the evidence and any safe local work, but do not generalize ownership or promise the disputed behavior. Mark the contract stopped and name the exact owner decision required.
-11. For historical replay, if an exact protocol field or external schema is unavailable but target behavior is fixed, describe the safe owner/parser boundary and record the contract prerequisite. Do not stop or guess an identifier unless no safe candidate can be formed. A field or behavior explicitly named by the task is a requirement, not an unknown merely because its generated wire declaration is absent; only its unresolved wire identifier/shape may remain a prerequisite.
-12. Audit every proposed stop before final output. `stopped=true` is valid only when (a) a disputed semantic or user-visible choice remains for the owner, or (b) no safe candidate action can be described before an external contract arrives. If `candidate_changes` already contains an adapter/parser seam, fail-closed wiring, UI extraction, or another reversible boundary action, missing field names, JSON keys, message values, limits, or defaults are prerequisites/unknowns with `stopped=false`, not blockers. Name the exact unresolved choice for every valid stop.
-13. Give `disputed` precedence over the safe-local-work exception. When a task requirement intersects a relevant disputed entry at the replay baseline, the contract must remain `stopped=true` even if the candidate preserves current behavior, calls the policy “out of scope,” or provides useful local filtering/snapshot work. Record the semantic ID, evidence revalidation, safe local work, and exact owner decision; preserving current behavior prevents an unsafe patch but does not resolve the dispute.
-14. Treat every selected benefit or option—coupon, package, product, reward, channel, promotion—as scoped data. Cross-check its applicability against every business type in the matrix, not only tier/channel. Freeze it only for the matching attempt; clear or reject it when entering an out-of-scope business type so an old selection cannot leak into another purchase.
-15. Locate the authoritative domain owner before adding server-driven state. Extend the existing user-tag/domain-model chain that consumers already read; do not copy a new server label into `CoreData`, a login singleton, a view model, or another convenience cache unless that object is already the verified authority for the label. A parser/adapter seam belongs at the authoritative mapping boundary, and logout/account-switch semantics stay with that owner.
-16. Separate lifecycle cardinalities explicitly. A user-scoped “first/only once” onboarding or auto-detail decision is not the same state as per-view exposure deduplication or per-scene display count. Re-entry/refresh behavior must use the existing policy owner or an external-contract prerequisite; a page-session boolean may deduplicate exposure but cannot silently redefine a user-scoped first-time rule.
-17. Treat path-family words in the task as hard scope: legacy, new wallet, new popup, black-user, wallet, H5, and RN are not interchangeable examples. For every requested family, enumerate the exact baseline caller/handoff in the ledger and include it in `candidate_changes` and validation. A modern or similarly named path cannot substitute for an omitted legacy caller; extra families require separate evidence and must not displace the requested ones.
-18. Close the baseline propagation graph for every value that must travel end to end. Enumerate all existing selection/producers for that value, every channel-specific start handoff, the attempt/context carrier, and every retry/change/result consumer. Do not declare a UI family “not applicable” merely because the first producer found belongs to another family; run a second exact search for the value's semantic model, selection state, and retry carrier, then either include each caller or cite concrete evidence that it cannot originate or be consumed there.
-19. Resolve every product-role word such as “current popup,” “deprecated popup,” “wallet,” or “home entry” to an exact baseline runtime host before assigning inclusion or exclusion. Prove the mapping from live registration, construction, presentation, and ownership call sites; a class name, directory name, or superficial similarity is not evidence. Record a two-column requested-role → exact-class table and reject the contract if an included and excluded host may have been reversed.
-20. A value producer may be a server model, preselected config, controller state, or an upstream handoff rather than a dedicated selection UI. For every task-requested family, trace reads as well as writes of the semantic value through its start method and carrier. The absence of the first producer shape found in another family cannot justify exclusion; only concrete control-flow evidence that the requested family cannot hold, receive, or forward the value may do so.
-21. Run a final ledger-to-patch closure check after drafting the contract. Every requirement row and every requested path-family row must appear as an explicit `candidate_changes` action and an explicit validation, not merely as evidence, an impact-matrix cell, an invariant, or a review note. This includes each legacy or modern start entry and each business-type sink; one shared helper does not prove its callers were wired.
-22. Model configuration-dependent behavior with at least three states when applicable: configuration absent/not ready, configuration present and allowing, and configuration present and forbidding. Derive the absent-state default from baseline behavior or an external contract; do not silently treat absence as denial, or denial as absence. Make the three-state rule visible in both the action and validation.
-23. When the task names a server-designated event, reward, callback, field, or schema but the replay baseline does not expose its authoritative identifier, describe a contract-supplied matcher or adapter. Do not promote the closest existing message class, numeric type, JSON leaf, carrier, or handler into the unique contract merely because it is the best available integration lead.
-24. For server-driven presentation models, make parser validity and lifecycle cardinality executable in the contract: validate runtime types, trim user-visible strings before non-empty checks, clear stale UI on invalid refresh, and place user-scoped suppression with the existing user policy so it survives page re-entry. Keep page-scoped exposure dedupe separate.
+- Prefer current exact source reads and direct control/data-flow evidence. Rank evidence: exact symbol/key/literal and event producer/consumer/declaration first; historical co-change only as an investigation lead; name similarity only as a low-confidence appendix.
+- Separate current code facts, historical facts with commits, kernel constraints, inference, conflicts, and unknowns. Cite a repo-relative path and symbol for important conclusions.
+- Weak evidence cannot promote a semantic, prove ownership/dependency, create a blocker, or prove that a dynamic caller/subscriber does not exist. When a search has no result, report revision, scope, and query instead of claiming absence.
+- For an as-of task, use `git grep <rev>`/`git show <rev>:<path>` or `source_index.py --rev <rev>` and forbid forward knowledge.
 
-Keep index context bounded: use one to three exact symbols, constants, keys, or path tokens only for uncovered ledger rows. Follow exact/event evidence first. Run a second narrow query only when the first leaves a named clause uncovered; do not inject broad name-similarity or full co-change output into the working context.
+### 3. Risk and conflict gate
 
-## Compact change contract
+Apply knowledge type before implementation:
+
+- Kernel `confirmed`: may constrain the change after its scope and evidence still match.
+- Research `provisional`: requires current evidence and cannot constrain implementation or become an invariant by repetition.
+- Research `disputed`: stop the intersecting behavior and request the exact owner decision, even if safe local work exists.
+
+The research area is not part of the Kernel and is not loaded by default. From the workbench root read `knowledge/recharge-research/open-decisions.yaml` only when the task changes popup scene exclusion/display overlap, independent Apple versus legacy notification isolation, or empty-expand/active-trace concurrent or late-callback correlation. Record only the matching decision in `loaded_research_decisions`; other research items remain out of the working set.
+
+Assign the highest applicable risk:
+
+- R0: docs/comments or pure Debug support disconnected from production entry points.
+- R1: leaf UI/formatting or pure models without routing or payment-state effects.
+- R2: entry, routing, configuration, analytics, Bridge, or cross-file propagation.
+- R3: ordering, IAP/Web results, receipt, arrival, idempotency, notification payload, payment identity/context, cleanup/logout/late callback, or payment state.
+
+R3 is a hard edit gate: obtain explicit personal-owner or payment-owner confirmation before changing code. Also stop on a source/kernel conflict or a high-risk unknown that leaves no safe reversible boundary action. Name the conflicting source/semantic and the precise decision needed.
+
+### 4. Requirement and runtime-host gate
+
+Build a minimal behavior ledger with one row per explicit requirement or preservation clause:
+
+```text
+requirement/condition | exact evidence or external-contract unknown | current runtime host/owner | candidate action | static validation
+```
+
+Resolve product-role words to exact runtime hosts through live registration, construction, presentation, handoff, and ownership call sites. Class/directory names and superficial similarity are not proof. Treat named path families and exclusions as hard scope, and close every ledger row into both an action and validation. Read only paths needed for those rows; do not fill a universal impact matrix when the task does not require it.
+
+### 5. Conditional checklist gate
+
+Load no reference by default. Load at most the references whose trigger matches the task (maximum three), record them in the receipt, and apply only the relevant sections:
+
+- Entry, route, runtime host, UI, notification, or cross-path propagation: [references/runtime-path-coverage.md](references/runtime-path-coverage.md).
+- Payment/result/receipt/retry/change-channel/context/identity/cleanup/logout/late-callback lifecycle: [references/payment-attempt-lifecycle.md](references/payment-attempt-lifecycle.md).
+- Server configuration/model/schema/parser, channel/coupon/package/reward scope, or selected/account state: [references/server-driven-state.md](references/server-driven-state.md).
+
+Specialized checks are allowed only behind these triggers. A rule may enter the resident gates only when it is a cross-task mechanism or a critical invariant.
+
+### 6. Evidence-gap and index gate
+
+Use direct exact reads first. Run the read-only index only for a named ledger gap involving cross-file callers, event producers/consumers, Bridge parity, or path discovery. Use one to three exact identifiers, never broad topic words:
+
+```bash
+python3 <skill-dir>/scripts/source_index.py \
+  --repo <source-repository-root> \
+  --query <symbol-or-key> --query <event-or-path-token> \
+  --max-results 60 --max-chars 12000
+```
+
+The default output is exact/event evidence only. Request bounded co-change with `--history-limit <n>` or name similarity with `--include-name-similarity` only after exact/event evidence leaves a recorded gap. Consume truncated output as incomplete, record every query and source revision in the loading receipt, and follow results into source before drawing conclusions. There is no index-only default arm: an index result alone is not an implementation contract or completeness proof.
+
+### 7. Compact contract and validation gate
+
+Before editing, output a compact contract:
 
 ```text
 Goal:
-Change scope:
-Responsible layer to change:
-Layers that must not change:
-Affected legacy/new/black-user/wallet paths:
-Affected Apple/Web/H5/RN paths:
-Invariants to preserve:
-Known risks:
-Unknowns:
-Conflicts:
-Validation:
+Change scope and responsible layer:
+Layers/paths that must not change:
+Affected runtime hosts and Apple/Web/H5/RN paths:
+Invariants:
+Candidate changes (mapped to ledger rows):
+Known risks / unknowns / conflicts:
+Static validation:
 Risk: R0 | R1 | R2 | R3
 Required confirmation:
+Stopped: true | false (exact reason when true)
 ```
 
-Keep the contract in the task output or change description unless the user explicitly asks to persist it.
+Hard-fail or escalate any proposal that could duplicate ordering/credited feedback; merge payment, arrival, or entitlement stages; merge distinct result states; lose or confuse transaction identity; clear another attempt's context; bypass established Component/Module ownership; reverse an included/excluded runtime host; break a named legacy/new/black-user/wallet/H5/RN path; prefer stale knowledge; rely on weak evidence; or choose user-visible payment behavior without confirmation.
 
-## Hard-fail checks
+After editing, inspect the actual diff and re-run task-proportional static checks. Close the ledger against the diff; verify responsibility boundaries, every requested path, narrow cleanup and late-callback behavior, and whether a confirmed semantic's evidence or invalidation condition is now stale. Report remaining unknowns and hard failures explicitly.
 
-Reject or escalate a proposed change that could:
+## Overfitting and evaluation boundary
 
-- duplicate ordering or credited-currency feedback;
-- merge success, cancellation, failure, timeout, risk-control, or frozen-account outcomes;
-- lose traceId, transaction token, orderId, or payment context;
-- clear another transaction's context;
-- bypass the established Component or Module boundary;
-- break legacy/new/black-user/wallet routing;
-- reverse the exact baseline hosts assigned to a requested current/deprecated or included/excluded product role;
-- claim no caller or subscriber based on low-confidence or incomplete static search;
-- silently prefer stale knowledge over current source evidence;
-- choose a user-visible payment behavior without owner confirmation.
-
-## Evidence output rules
-
-- Cite a concrete path and symbol for important conclusions; include a commit for historical claims.
-- Label inference and unknowns explicitly.
-- Never promote `name_similarity` or historical co-change alone to confirmed fact or a blocking condition.
-- When no evidence is found, state the searched revision, paths, and queries. Do not claim the object does not exist.
+Task-specific specialization is useful only when conditionally activated. Old question types, candidate schemas, scoring expectations, and historical exam exceptions belong in Evaluation V2, not this skill or its references. Do not justify a resident rule because it improved the old 12 tasks. Rule value must be established by unseen tasks or real shadow use; byte/check-count budgets are complexity guardrails, not evidence of effectiveness.
