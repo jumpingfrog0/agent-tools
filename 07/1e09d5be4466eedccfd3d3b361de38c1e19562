@@ -1,0 +1,25 @@
+drama-ios/drama-ios-recharge-expert/SKILL.md
+  h_82a5b866197337 8,10-99,102-108,111,114,116,118,120
+drama-ios/drama-ios-recharge-expert/references/payment-attempt-lifecycle.md
+  h_82a5b866197337 1-38
+drama-ios/drama-ios-recharge-expert/references/runtime-path-coverage.md
+  h_82a5b866197337 1-39
+drama-ios/drama-ios-recharge-expert/references/server-driven-state.md
+  h_82a5b866197337 1-44
+drama-ios/drama-ios-recharge-expert/scripts/source_index.py
+  h_82a5b866197337 12,37-44,176,213,218,240,245-276,278-431,433-476,479-484,487,491,495-546,551,558-564,579-582,590-598
+drama-ios/drama-ios-recharge-expert/scripts/test_source_index.py
+  h_82a5b866197337 63-80,83-90,104,106-120,127,129-141,145-327
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "071e09d5be4466eedccfd3d3b361de38c1e19562",
+  "prompts": {},
+  "logical_commit_id": "071e09d5be4466eedccfd3d3b361de38c1e19562",
+  "humans": {
+    "h_82a5b866197337": {
+      "author": "jumpingfrog0 <jumpingfrog0@gmail.com>"
+    }
+  }
+}
