@@ -1,0 +1,38 @@
+README.md
+  s_7f94ffd67e6e12::t_07e6c8c112175a 2-57
+skills/likee/git-workflow-likee/SKILL.md
+  s_0d3931d82c5a39::t_d12bb6a02d213e 1-25
+skills/likee/git-workflow-likee/agents/openai.yaml
+  s_0d3931d82c5a39::t_941dec88f6d691 1-4
+skills/likee/git-workflow-likee/references/commit-conventions.md
+  s_0d3931d82c5a39::t_cf34cd569c5ac8 1-13
+skills/likee/git-workflow-likee/references/develop-rebase-flow.md
+  s_0d3931d82c5a39::t_f739abea63a7ab 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "07b2a20c754ad2e70be7060f3e086e6874d633e7",
+  "prompts": {},
+  "logical_commit_id": "07b2a20c754ad2e70be7060f3e086e6874d633e7",
+  "sessions": {
+    "s_0d3931d82c5a39": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18065-aafc-7af0-8853-5c4383c9cac9",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "huangdonghong <huangdonghong@bigo.sg>"
+    },
+    "s_7f94ffd67e6e12": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18680-4a0e-7081-b67a-c6d6f32dc505",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "huangdonghong <huangdonghong@bigo.sg>",
+      "total_additions": 56,
+      "total_deletions": 1
+    }
+  }
+}
